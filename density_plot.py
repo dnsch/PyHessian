@@ -19,13 +19,14 @@
 #*
 
 import math
+import os
 import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 
 
-def get_esd_plot(eigenvalues, weights):
+def get_esd_plot(eigenvalues, weights, save_dir=None):
     density, grids = density_generate(eigenvalues, weights)
     plt.figure(figsize=(10, 6))
     plt.semilogy(grids, density + 1.0e-7)
@@ -35,7 +36,13 @@ def get_esd_plot(eigenvalues, weights):
     plt.yticks(fontsize=12)
     plt.axis([np.min(eigenvalues) - 1, np.max(eigenvalues) + 1, None, None])
     plt.tight_layout()
-    plt.savefig('eigenvalues.png')
+    if save_dir is not None:
+        os.makedirs(save_dir, exist_ok=True)
+        out_path = os.path.join(str(save_dir), 'eigenvalues.png')
+    else:
+        out_path = 'eigenvalues.png'
+    plt.savefig(out_path)
+    plt.close()
 
 
 def density_generate(eigenvalues,
